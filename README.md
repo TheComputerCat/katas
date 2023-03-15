@@ -1,0 +1,2 @@
+# katas
+Repo for katas
