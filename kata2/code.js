@@ -49,7 +49,7 @@ export function checkDeadCellLives(grid, row, column){
     }
     return false;
 }
-export function calculeNextGeneration(grid){
+export function calculateNextGeneration(grid){
     const width = grid.width;
     const height = grid.value.length/grid.width;
     console.log(height, width)

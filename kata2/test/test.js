@@ -282,7 +282,7 @@ describe('Game of life simulation', function () {
       });
     });
 
-    describe('Check fourth rule: any dead cell with exactly three live neighbours becomes a live cell', function (){
+    describe('Check fourth rule: any dead cell with exactly three live neighbors becomes a live cell', function (){
       it('A 5x5 grid where cell (2,2) is dead and has 3 live neighbors', function(){
         const expected = true;
         let grid = gameOfLifeFunctions.createGird(5, 5);
@@ -320,7 +320,7 @@ describe('Game of life simulation', function () {
       });
     });
 
-    describe('Calcule next generation given a initial grid', function (){
+    describe('Calculate next generation given a initial grid', function (){
       it('A 5x5 grid where cell (2,2) is alive', function(){
         let expectedGrid = gameOfLifeFunctions.createGird(5,5);
 
@@ -328,11 +328,11 @@ describe('Game of life simulation', function () {
 
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 2, 2);
 
-        const result = gameOfLifeFunctions.calculeNextGeneration(grid);
+        const result = gameOfLifeFunctions.calculateNextGeneration(grid);
         assert.deepEqual(expectedGrid, result, 'Only one alive cell, next generation must be all cells dead');
       });
 
-      it('A 5x5 grid where cell (2,2) is alive and has 2 live neighbouts', function(){
+      it('A 5x5 grid where cell (2,2) is alive and has 2 live neighbors', function(){
         let expectedGrid = gameOfLifeFunctions.createGird(5,5);
         expectedGrid = gameOfLifeFunctions.setCellAsAlive(expectedGrid, 2, 2);
         expectedGrid = gameOfLifeFunctions.setCellAsAlive(expectedGrid, 1, 2);
@@ -344,11 +344,11 @@ describe('Game of life simulation', function () {
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 2, 1);
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 2, 3);
 
-        const result = gameOfLifeFunctions.calculeNextGeneration(grid);
+        const result = gameOfLifeFunctions.calculateNextGeneration(grid);
         assert.deepEqual(result, expectedGrid);
       });
 
-      it('A 5x5 grid where cell (2,2) is alive and has 2 live neighbouts', function(){
+      it('A 5x5 grid where cell (2,2) is alive and has 2 live neighbors', function(){
         let expectedGrid = gameOfLifeFunctions.createGird(5,5);
 
         expectedGrid = gameOfLifeFunctions.setCellAsAlive(expectedGrid, 2, 2);
@@ -361,11 +361,11 @@ describe('Game of life simulation', function () {
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 1, 2);
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 3, 2);
 
-        const result = gameOfLifeFunctions.calculeNextGeneration(grid);
+        const result = gameOfLifeFunctions.calculateNextGeneration(grid);
         assert.deepEqual(result, expectedGrid);
       });
 
-      it('A 4x8x5 grid whith 3 live cells', function(){
+      it('A 4x8x5 grid with 3 live cells', function(){
         let expectedGrid = gameOfLifeFunctions.createGird(4,8);
 
         expectedGrid = gameOfLifeFunctions.setCellAsAlive(expectedGrid, 1, 3);
@@ -379,7 +379,7 @@ describe('Game of life simulation', function () {
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 2, 3);
         grid = gameOfLifeFunctions.setCellAsAlive(grid, 2, 4);
 
-        const result = gameOfLifeFunctions.calculeNextGeneration(grid);
+        const result = gameOfLifeFunctions.calculateNextGeneration(grid);
 
         assert.deepEqual(result, expectedGrid);
       });
