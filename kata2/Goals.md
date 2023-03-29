@@ -1,0 +1,7 @@
+- [x] Game logic
+    - [x] create grid
+    - [x] set cell as alive
+    - [x] set cell as dead
+    - [x] detect if cell is alive or not
+    - [x] detect rules
+    - [x] calculate next generation
