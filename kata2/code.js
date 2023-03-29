@@ -52,7 +52,6 @@ export function checkDeadCellLives(grid, row, column){
 export function calculateNextGeneration(grid){
     const width = grid.width;
     const height = grid.value.length/grid.width;
-    console.log(height, width)
     let newGrid = createGird(height, width);
     grid.value.forEach((cell, index) => {
         newGrid = selectCase(grid, index%height, Math.floor(index/height), newGrid);
