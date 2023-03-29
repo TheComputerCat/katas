@@ -1,2 +1,2 @@
 # katas
-Repo for katas
+Repo for katas using TDD.
