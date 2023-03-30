@@ -25,9 +25,18 @@ export function checkUnderpopulated(grid, row, column){
     return false;
 }
 function countAliveNeighbors(grid, row, column){
-    const neighborOffset = [-grid.width - 1, -grid.width, -grid.width + 1, -1, 1, grid.width - 1, grid.width, grid.width + 1] ; 
-    const neighbors = neighborOffset.map((offset) => offset + grid.width * row + column);
-    const aliveNeighbors = neighbors.filter((neighbor) => neighbor > -1 && grid.value[neighbor]);
+    const getIndexFromOffset = (offset) => offset + grid.width * row + column;
+    const neighborUp = [-grid.width - 1, -grid.width, -grid.width + 1].map(getIndexFromOffset);
+    const neighborMiddel = [ -1, 1].map(getIndexFromOffset);
+    const neighborBottom = [grid.width - 1, grid.width, grid.width + 1].map(getIndexFromOffset);
+
+    const aliveNeighborUp = neighborUp.filter((cellIndex) => Math.floor(cellIndex/grid.width) === row - 1);
+    const aliveNeighborMiddel = neighborMiddel.filter((cellIndex) => Math.floor(cellIndex/grid.width) === row);
+    const aliveNeighborBottom = neighborBottom.filter((cellIndex) => Math.floor(cellIndex/grid.width) === row + 1);
+
+    const neighbors = aliveNeighborUp.concat(aliveNeighborMiddel, aliveNeighborBottom);
+
+    const aliveNeighbors = neighbors.filter((neighbor) => isAlive(grid, Math.floor(neighbor/grid.width), neighbor%grid.width));
     return aliveNeighbors.length;
 }
 export function checkOvercrowding(grid, row, column){
@@ -54,7 +63,7 @@ export function calculateNextGeneration(grid){
     const height = grid.value.length/grid.width;
     let newGrid = createGird(height, width);
     grid.value.forEach((cell, index) => {
-        newGrid = selectCase(grid, index%height, Math.floor(index/height), newGrid);
+        newGrid = selectCase(grid, Math.floor(index/width), index%width, newGrid);
     });
     return newGrid;
     
