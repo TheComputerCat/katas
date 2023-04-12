@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  },
+  "scripts": {
+    "test": "mocha test/test.js",
+    "test:watch": "mocha test/test.js --watch -parallel"
+  },
+  "type": "module",
+  "comments": {
+    "mochaWatch": "issue with --watch, partially solved with -parallel"
+  }
+}
