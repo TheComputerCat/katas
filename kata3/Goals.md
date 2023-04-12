@@ -4,12 +4,12 @@
     - [x] parse anf get operation
     - [x] operate with new delimiter
 - [x] step 5
-    -[x] get negative numbers
-    -[x] print message
+    - [x] get negative numbers
+    - [x] print message
 - [x] step 7
-    -[x] detect syntax
-    -[x] parse and get delimiter
+    - [x] detect syntax
+    - [x] parse and get delimiter
 - [x] step 8
     - [x] detect syntax
     - [x] get delimiters
-- [] verify complete syntax
+- [ ] verify complete syntax
