@@ -1,0 +1,14 @@
+- [x] get confident with tests
+    - [x] test limit cases
+    - [x] cover all constrains
+- [x] clean 
+    - [x] remove for 
+    - [x] remove unnecessary statements
+    - [x] remove verification of exact name product
+- [x] correct bugs
+    -[x] Quality drops to 0 after the concert
+- [x] refactor old code
+    -[x] remove repetitive bound verifications
+    -[x] simplify conditionals
+    -[x] simplify minor statements
+I tried only to clean the main functionality instead of refactor all old code.  
