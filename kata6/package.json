@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
+  },
+  "scripts": {
+    "test": "mocha code/test/*.js",
+    "test:watch": "mocha code/test/*.js --watch -parallel",
+    "coverage": "nyc npm run test"
+  },
+  "comments": {
+    "mochaWatch": "issue with --watch, partially solved with -parallel"
+  }
+}
