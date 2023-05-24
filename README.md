@@ -1,4 +1,4 @@
-# katas\
+# Katas
 
 Repo for katas using TDD.
 
