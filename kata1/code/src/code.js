@@ -3,77 +3,82 @@ const suits = ["T", "J", "Q", "K", "A"];
 const gamble = ["high card", "pair", "double pair", "three of a kind",  "straight", "flush", "full house", "four of a kinf", "straight flush"]
 const tieFunctions = [highCardTie, pairTie, doublePairTie, threeTie, straightAndFlushTie, straightAndFlushTie, fullTie, fourTie, straightAndFlushTie]
 
-export function getCard(cardText){
+function getCard(cardText){
     return {value: valueAsNumber(cardText[0]), suit: cardText[1]};
 }
-export function getHand(handText){
+function getHand(handText){
     return handText.split(" ").map(getCard);
 }
-export function valueAsNumber(suit){
+function valueAsNumber(suit){
     if(isNaN(suit)){
         return suits.indexOf(suit) + 10;
     }
     return Number.parseInt(suit);
 }
-export function createGame(blackHand, whiteHand){
+function createGame(blackHand, whiteHand){
     return { "Black": blackHand, "White": whiteHand };
 }
-export function getGame(game){
+function getGame(game){
     let hands = game.split("  ");
     let blackHand = getHand(hands[0].split(": ")[1]);
     let whiteHand = getHand(hands[1].split(": ")[1]);
     return createGame(blackHand, whiteHand);
 }
-
-export function sortByValue(game){//names??
+function sortByValue(game){//names??
     let blackHand = game["Black"].sort((a, b) => a.value - b.value);
     let whiteHand = game["White"].sort((a, b) => a.value - b.value);
     return createGame(blackHand, whiteHand);
 }
-export function numberToValue(number){
+function numberToValue(number){
     if(9 < number && number < 15){
         return suits[number - 10];
     }
     return number;
 }
-export function highCardInHand(hand){
+function highCardInHand(hand){
     //Assumed ordered cards
-    return hand.pop().value;
+    const newHand =structuredClone(hand);
+    return newHand.pop().value;
 }
-export function highCardTie(game){
+function highCardTie(game){
     //To functional
     let whiteHigh;
     let blackHigh;
-    for (let i = game.Black.length; i > 0; i--) {
+
+    const el = Array.from({length: 5}, (_, i) => i + 1).findLastIndex((i) => {
         whiteHigh = highCardInHand(game.White.slice(0, i));
         blackHigh = highCardInHand(game.Black.slice(0, i));
-        if(whiteHigh != blackHigh)
-            break;
-        if(i == 1){
-            return {"isWinner": false}
-        }     
+        return whiteHigh != blackHigh;
+    });
+    // for (let i = game.Black.length; i > 0; i--) {
+    //     whiteHigh = highCardInHand(game.White.slice(0, i));
+    //     blackHigh = highCardInHand(game.Black.slice(0, i));
+    //     if(whiteHigh != blackHigh)
+    //         break;
+    //     if(i == 1){
+    //         return {"isWinner": false}
+    //     }     
+    // }
+    if (el === -1 ) {
+        return {"isWinner": false};
     }
+
     if (whiteHigh > blackHigh) {
         return {"isWinner":true, "winner": "White", high: whiteHigh};
     } 
     return {"isWinner":true, "winner": "Black", high: blackHigh};
 }
 
-
-export function firstPairInHand(hand){
-    for (let index = 0; index < hand.length - 1; index++) {
-        if(hand[index].value == hand[index + 1].value){
-            return {
-                "pair": true,
-                "beginning": index
-            };
-        }
+function firstPairInHand(hand){
+    const indexFirstPair = indexFirstConsecutiveValues(hand, 2);
+    const response = { "pair": indexFirstPair !== -1};
+    if(response.pair) {
+        response.beginning = indexFirstPair;
     }
-    return {
-        "pair": false
-    };
+    return response;
 }
-export function pairTie(game){
+
+function pairTie(game){
     // Highest hand is pair assumed
     let whitePairBeginning = firstPairInHand(game.White).beginning;
     let blackPairBeginning = firstPairInHand(game.Black).beginning;
@@ -89,7 +94,7 @@ export function pairTie(game){
     }
     return {"isWinner": true, "winner": "Black", high: game.Black[blackPairBeginning].value};
 }
-export function doublePairInHand(hand){
+function doublePairInHand(hand){
     
     const firstPair = firstPairInHand(hand);
     if (!firstPair.pair || firstPair.beginning  > 2){
@@ -106,8 +111,7 @@ export function doublePairInHand(hand){
     return {"doublePair": false}
 
 }
-
-export function doublePairTie(game){
+function doublePairTie(game){
     const whiteSecondPairBeginning = doublePairInHand(game.White).beginningHighest;
     const blackSecondPairBeginning = doublePairInHand(game.Black).beginningHighest;
     if(game.White[whiteSecondPairBeginning].value == game.Black[blackSecondPairBeginning].value){
@@ -122,27 +126,30 @@ export function doublePairTie(game){
     }
     return {"isWinner": true, "winner": "Black", high: game.Black[blackSecondPairBeginning].value};
 }
-export function genericPrint(game, tieFn, hand){
+function genericPrint(game, tieFn, hand){
     const result = tieFn(game);
     if(result.isWinner){
         return result.winner + " wins. - with " + hand + ": " + numberToValue(result.high);
     }
     return "Tie.";
 }
-export function threeInHand(hand){
-    for (let index = 0; index < 3; index++) {
-        if(hand[index].value == hand[index + 1].value && hand[index].value == hand[index + 2].value){
-            return {
-                "three": true,
-                "beginning": index
-            };
-        }
-    }
-    return {
-        "three": false
-    };
+
+function indexFirstConsecutiveValues(hand, size) {
+    return hand.findIndex((_, index) => {
+       return index + size <= hand.length && hand[index].value === hand[index + size - 1].value;
+    });
 }
-export function threeTie(game){
+
+function threeInHand(hand){
+    const indexThree = indexFirstConsecutiveValues(hand, 3);
+    const response = { "three": indexThree !== -1};
+    if(response.three) {
+        response.beginning = indexThree;
+    }
+    return response;
+}
+
+function threeTie(game){
     const whiteThreeBeginning = threeInHand(game.White).beginning;
     const blackThreeBeginning = threeInHand(game.Black).beginning;
 
@@ -158,19 +165,19 @@ export function threeTie(game){
     }
     return {"isWinner": true, "winner": "Black", high: game.Black[blackThreeBeginning].value};
 }
-export function straightInHand(hand){
+function straightInHand(hand){
     // order in or matters because check if index is not the end of array
     return hand.every((current, index, array) => (index == array.length - 1 || current.value + 1 == array[index + 1].value));
 }
-export function straightAndFlushTie(game){
+function straightAndFlushTie(game){
     // Assumed both tested straights or flush
     return highCardTie(game);
 }
-export function flushInHand(hand){
+function flushInHand(hand){
     return hand.every((current, index, array) => (current.suit == array[1].suit));
 
 }
-export function fullInHand(hand){
+function fullInHand(hand){
     const three = threeInHand(hand);
     if(three.three){
         const pair = firstPairInHand(hand.slice(0, three.beginning).concat(hand.slice(three.beginning + 3)));
@@ -184,24 +191,18 @@ export function fullInHand(hand){
     }
     return { "full": false }
 }
-export function fullTie(game){
+function fullTie(game){
    return threeTie(game);
 }
-
-export function fourInHand(hand){
-    for (let index = 0; index < 2; index++) {
-        if(hand[index].value == hand[index + 1].value && hand[index].value == hand[index + 2].value && hand[index].value == hand[index + 3].value){
-            return {
-                "four": true,
-                "beginning": index
-            };
-        }
+function fourInHand(hand){
+    const indexFour = indexFirstConsecutiveValues(hand, 4);
+    const response = { "four": indexFour !== -1};
+    if(response.four) {
+        response.beginning = indexFour;
     }
-    return {
-        "four": false
-    };
+    return response;
 }
-export function fourTie(game){
+function fourTie(game){
     const whiteThreeBeginning = fourInHand(game.White).beginning;
     const blackThreeBeginning = fourInHand(game.Black).beginning;
 
@@ -214,10 +215,10 @@ export function fourTie(game){
     }
     return {"isWinner": true, "winner": "Black", high: game.Black[blackThreeBeginning].value};
 }
-export function straightFlushInHand(hand){
+function straightFlushInHand(hand){
     return flushInHand(hand) && straightInHand(hand);
 }
-export function rankHand(hand){
+function rankHand(hand){
     if(straightFlushInHand(hand)){
         return 8;
     }
@@ -246,7 +247,7 @@ export function rankHand(hand){
         return 0;
     }
 }
-export function setWinner(game){
+function setWinner(game){
     const blackGamble = rankHand(game.Black.slice(0));//Copy of array
     const whiteGamble = rankHand(game.White.slice(0));
     if (blackGamble == whiteGamble){
@@ -258,7 +259,7 @@ export function setWinner(game){
         return "White wins. - with " + gamble[whiteGamble] + winMessage(whiteGamble, game.White);
     }
 }
-export function winMessage(gamble, hand){
+function winMessage(gamble, hand){
     let message = "";
     switch (gamble) {
         case 7:
@@ -279,3 +280,35 @@ export function winMessage(gamble, hand){
     }
     return message == "" ? "" : ": " + message; 
 }
+
+module.exports = {
+    getCard,
+    getHand,
+    valueAsNumber,
+    createGame,
+    getGame,
+    sortByValue,
+    numberToValue,
+    highCardInHand,
+    highCardTie,
+    firstPairInHand,
+    pairTie,
+    doublePairInHand,
+    doublePairTie,
+    genericPrint,
+    threeInHand,
+    threeTie,
+    straightInHand,
+    straightFlushInHand,
+    flushInHand,
+    fullInHand,
+    fullTie,
+    fourInHand,
+    fourTie,
+    straightFlushInHand,
+    straightAndFlushTie,
+    rankHand,
+    setWinner,
+    winMessage,
+}
+  
